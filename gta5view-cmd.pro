@@ -16,11 +16,13 @@
 #* along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #*****************************************************************************/
 
-QT       += gui
+QT += gui
 
 DEPLOYMENT.display_name = gta5view-cmd
 TARGET = gta5view-cmd
 TEMPLATE = app
+
+CONFIG += console
 
 SOURCES += main.cpp \
     gta5sync/SnapmaticPicture.cpp \
