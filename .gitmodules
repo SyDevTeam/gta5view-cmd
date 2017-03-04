@@ -1,0 +1,3 @@
+[submodule "gta5sync"]
+	path = gta5sync
+	url = https://github.com/Syping/gta5sync
