@@ -60,3 +60,6 @@ isEqual(QT_MAJOR_VERSION, 4): SOURCES += gta5sync/qjson4/QJsonArray.cpp \
     gta5sync/qjson4/QJsonValue.cpp \
     gta5sync/qjson4/QJsonValueRef.cpp \
     gta5sync/qjson4/QJsonParser.cpp
+
+RESOURCES += \
+    res.qrc

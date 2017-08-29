@@ -18,6 +18,7 @@
 
 #include "SnapmaticPicture.h"
 #include <QCoreApplication>
+#include <QDateTime>
 #include <iostream>
 using namespace std;
 
@@ -26,26 +27,108 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     QStringList args = a.arguments();
 
-    if (args.length() == 3)
+    if (args.length() >= 3)
     {
-        SnapmaticPicture picture(args.at(1));
-        if (picture.readingPicture(true, false, true))
+        bool convertToGTA = true;
+        bool customFormat = false;
+        if (args.length() == 4)
         {
-            if (!picture.exportPicture(args.at(2), "JPG"))
+            if (args.at(3) == "-pgta")
             {
-                cout << "gta5view-cmd: Exporting of " << args.at(1).toStdString().c_str() << " to " << args.at(2).toStdString().c_str() << " failed!" << endl;
+                convertToGTA = true;
+                customFormat = false;
+            }
+            else if (args.at(3) == "-g5e")
+            {
+                convertToGTA = true;
+                customFormat = true;
+            }
+        }
+        if (!convertToGTA)
+        {
+            SnapmaticPicture picture(args.at(1));
+            if (picture.readingPicture(true, false, true))
+            {
+                if (!picture.exportPicture(args.at(2), "JPG"))
+                {
+                    cout << "gta5view-cmd: Exporting of " << args.at(1).toStdString().c_str() << " to " << args.at(2).toStdString().c_str() << " failed!" << endl;
+                    return 1;
+                }
+            }
+            else
+            {
+                cout << "gta5view-cmd: Reading of " << args.at(1).toStdString().c_str() << " failed!" << endl;
                 return 1;
             }
         }
         else
         {
-            cout << "gta5view-cmd: Reading of " << args.at(1).toStdString().c_str() << " failed!" << endl;
-            return 1;
+            SnapmaticPicture picture(":/template.g5e");
+            if (picture.readingPicture(true, false, true))
+            {
+                QImage image(args.at(1));
+                if (!image.isNull())
+                {
+                    QSize snapmaticRes(960, 536);
+                    if (image.size() != snapmaticRes) image = image.scaled(snapmaticRes, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+                    if (picture.setImage(image))
+                    {
+                        picture.setPictureTitle("Converted Picture");
+                        SnapmaticProperties pictureSP = picture.getSnapmaticProperties();
+                        pictureSP.uid = QString(QTime::currentTime().toString("HHmmss") +
+                                                                 QString("0") +
+                                                                 QString::number(QDate::currentDate().dayOfYear())).toInt();
+                        pictureSP.createdDateTime = QDateTime::currentDateTime();
+                        pictureSP.createdTimestamp = pictureSP.createdDateTime.toTime_t();
+                        picture.setSnapmaticProperties(pictureSP);
+                        picture.setPicFileName(QString("PGTA5%1").arg(QString::number(pictureSP.uid)));
+                        QString filePath = args.at(2);
+                        filePath.replace("<autodef>", picture.getPictureFileName());
+                        if (!customFormat)
+                        {
+                            if (!picture.exportPicture(filePath, "PGTA"))
+                            {
+                                cout << "gta5view-cmd: Converting of " << args.at(1).toStdString().c_str() << " to " << args.at(2).toStdString().c_str() << " failed!" << endl;
+                                return 1;
+                            }
+                        }
+                        else
+                        {
+                            if (!picture.exportPicture(filePath, "G5E"))
+                            {
+                                cout << "gta5view-cmd: Converting of " << args.at(1).toStdString().c_str() << " to " << args.at(2).toStdString().c_str() << " failed!" << endl;
+                                return 1;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        cout << "gta5view-cmd: Editing of Snapmatic Image Stream failed!" << endl;
+                        return 1;
+                    }
+                }
+                else
+                {
+                    cout << "gta5view-cmd: Reading of " << args.at(1).toStdString().c_str() << " failed!" << endl;
+                    return 1;
+                }
+            }
+            else
+            {
+                cout << "gta5view-cmd: Reading of internal template failed!" << endl;
+                return 1;
+            }
         }
     }
     else
     {
-        cout << "Usage: " << args.at(0).toStdString().c_str() << " source target" << endl;
+        cout << "gta5view Command Line" << endl << endl;
+        cout << "Usage: " << args.at(0).toStdString().c_str() << " source target -format" << endl;
+        if (args.at(1) == "--help")
+        {
+            cout << "Convert-only: <autodef> (Auto Filename at Convert)" << endl;
+            cout << "Formats: jpg pgta g5e" << endl;
+        }
         return 255;
     }
 
