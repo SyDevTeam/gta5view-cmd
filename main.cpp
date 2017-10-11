@@ -49,9 +49,12 @@ int main(int argc, char *argv[])
             SnapmaticPicture picture(args.at(1));
             if (picture.readingPicture(true, false, true))
             {
-                if (!picture.exportPicture(args.at(2), SnapmaticFormat::JPEG_Format))
+                QString filePath = args.at(2);
+                filePath.replace("<autodef>", picture.getExportPictureFileName());
+                filePath.replace("<autoext>", ".jpg");
+                if (!picture.exportPicture(filePath, SnapmaticFormat::JPEG_Format))
                 {
-                    cout << "gta5view-cmd: Exporting of " << args.at(1).toStdString().c_str() << " to " << args.at(2).toStdString().c_str() << " failed!" << endl;
+                    cout << "gta5view-cmd: Exporting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " failed!" << endl;
                     return 1;
                 }
             }
