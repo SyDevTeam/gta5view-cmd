@@ -36,7 +36,7 @@ INCLUDEPATH += ./gta5sync
 
 # WINDOWS ONLY
 
-win32: DEFINES += GTA5SYNC_WIN GTA5VIEW_CMD
+win32: DEFINES += GTA5SYNC_WIN
 # win32: RC_FILE += res/app.rc
 win32: LIBS += -luser32
 win32: CONFIG -= embed_manifest_exe

@@ -49,7 +49,7 @@ int main(int argc, char *argv[])
             SnapmaticPicture picture(args.at(1));
             if (picture.readingPicture(true, false, true))
             {
-                if (!picture.exportPicture(args.at(2), "JPG"))
+                if (!picture.exportPicture(args.at(2), SnapmaticFormat::JPEG_Format))
                 {
                     cout << "gta5view-cmd: Exporting of " << args.at(1).toStdString().c_str() << " to " << args.at(2).toStdString().c_str() << " failed!" << endl;
                     return 1;
@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
                         filePath.replace("<autodef>", picture.getPictureFileName());
                         if (!customFormat)
                         {
-                            if (!picture.exportPicture(filePath, "PGTA"))
+                            if (!picture.exportPicture(filePath, SnapmaticFormat::PGTA_Format))
                             {
                                 cout << "gta5view-cmd: Converting of " << args.at(1).toStdString().c_str() << " to " << args.at(2).toStdString().c_str() << " failed!" << endl;
                                 return 1;
@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
                         }
                         else
                         {
-                            if (!picture.exportPicture(filePath, "G5E"))
+                            if (!picture.exportPicture(filePath, SnapmaticFormat::G5E_Format))
                             {
                                 cout << "gta5view-cmd: Converting of " << args.at(1).toStdString().c_str() << " to " << args.at(2).toStdString().c_str() << " failed!" << endl;
                                 return 1;
