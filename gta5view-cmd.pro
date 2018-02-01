@@ -63,3 +63,7 @@ isEqual(QT_MAJOR_VERSION, 4): SOURCES += gta5sync/qjson4/QJsonArray.cpp \
 
 RESOURCES += \
     res.qrc
+
+isEmpty(GTA5SYNC_PREFIX): GTA5SYNC_PREFIX = /usr/local
+target.path = $$GTA5SYNC_PREFIX/bin
+INSTALLS += target
