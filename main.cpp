@@ -21,6 +21,7 @@
 #include <QDateTime>
 #include <QPainter>
 #include <QImage>
+#include <QMap>
 
 #include <iostream>
 using namespace std;
@@ -37,6 +38,8 @@ int main(int argc, char *argv[])
         bool convertToGTA = true;
         bool customFormat = false;
         bool keepAspectRatio = true;
+        QMap<QString,QString> flags;
+
         if (args.length() >= 4)
         {
             if (args.at(3) == "-pgta")
@@ -99,6 +102,26 @@ int main(int argc, char *argv[])
             {
                 isDefault = true;
                 keepAspectRatio = true;
+            }
+        }
+        if (args.length() >= 6)
+        {
+            QStringList flagArgs(args);
+            for (int argId = 0; argId == 5; argId++)
+            {
+                flagArgs.removeAt(argId);
+            }
+            for (QString flagArg : flagArgs)
+            {
+                QStringList currentFlagArg = flagArg.split("=");
+                QString currentFlag = currentFlagArg.at(0).toLower();
+                if (currentFlag.left(1) == "-")
+                {
+                    currentFlag.remove(0, 1);
+                    currentFlagArg.removeAt(0);
+                    QString currentValue = currentFlagArg.join(QString());
+                    flags[currentFlag] = currentValue;
+                }
             }
         }
         if (!convertToGTA)
@@ -216,12 +239,61 @@ int main(int argc, char *argv[])
 
                     if (picture.setImage(image))
                     {
-                        avatarMode ? picture.setPictureTitle("Converted Avatar") : picture.setPictureTitle("Converted Picture");
+                        int crew = 0;
+                        QStringList players;
+                        if (flags.contains("crew"))
+                        {
+                            bool crewValid;
+                            int crewId = flags["crew"].toInt(&crewValid);
+                            if (crewValid)
+                            {
+                                crew = crewId;
+                            }
+                        }
+                        if (flags.contains("title") && SnapmaticPicture::verifyTitle(flags["title"]))
+                        {
+                            picture.setPictureTitle(flags["title"]);
+                        }
+                        else
+                        {
+                            avatarMode ? picture.setPictureTitle("Converted Avatar") : picture.setPictureTitle("Converted Picture");
+                        }
+                        if (flags.contains("players"))
+                        {
+                            bool flagValid = true;
+                            QString playerFlag = flags["players"];
+                            if (playerFlag.left(1) == "[" && playerFlag.right(1) == "]")
+                            {
+                                playerFlag.remove(0, 1);
+                                playerFlag.remove(playerFlag.length() - 1, 1);
+                            }
+                            const QStringList playersList = playerFlag.split(",");
+                            for (QString player : playersList)
+                            {
+                                if (player.left(1) == "\"" && player.right(1) == "\"")
+                                {
+                                    player.remove(0, 1);
+                                    player.remove(player.length() - 1, 1);
+                                }
+                                bool playerValid;
+                                player.toInt(&playerValid);
+                                if (!playerValid)
+                                {
+                                    flagValid = false;
+                                }
+                            }
+                            if (flagValid)
+                            {
+                                players = playersList;
+                            }
+                        }
                         SnapmaticProperties pictureSP = picture.getSnapmaticProperties();
                         pictureSP.uid = QString(QTime::currentTime().toString("HHmmss") +
                                                 QString::number(QDate::currentDate().dayOfYear())).toInt();
                         pictureSP.createdDateTime = QDateTime::currentDateTime();
                         pictureSP.createdTimestamp = pictureSP.createdDateTime.toTime_t();
+                        pictureSP.crewID = crew;
+                        pictureSP.playersList = players;
                         picture.setSnapmaticProperties(pictureSP);
                         picture.setPictureFileName(QString("PGTA5%1").arg(QString::number(pictureSP.uid)));
                         QString filePath = args.at(2);
@@ -275,13 +347,14 @@ int main(int argc, char *argv[])
     else
     {
         cout << "gta5view Command Line" << endl << endl;
-        cout << "Usage: " << args.at(0).toStdString().c_str() << " source target -format -mode" << endl;
-        if (args.length() >= 2 && args.at(1) == "--help")
+        cout << "Usage: " << args.at(0).toStdString().c_str() << " source target -format -mode -flag=value" << endl;
+        if (args.length() >= 2 && args.at(1) == "--help" && args.at(1) == "-help")
         {
             cout << "Convert-only: <autodef> (auto file name at convert)" << endl;
             cout << "Convert-only: <autoext> (auto file extension at convert)" << endl;
             cout << "Formats: jpg pgta g5e" << endl;
             cout << "Modes: a p d aiar akar piar pkar diar dkar" << endl;
+            cout << "Flags: crew=int players=int[] title=string" << endl;
         }
         return 255;
     }
