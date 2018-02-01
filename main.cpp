@@ -348,7 +348,7 @@ int main(int argc, char *argv[])
     {
         cout << "gta5view Command Line" << endl << endl;
         cout << "Usage: " << args.at(0).toStdString().c_str() << " source target -format -mode -flag=value" << endl;
-        if (args.length() >= 2 && args.at(1) == "--help" && args.at(1) == "-help")
+        if (args.length() >= 2 && (args.at(1) == "--help" || args.at(1) == "-help"))
         {
             cout << "Convert-only: <autodef> (auto file name at convert)" << endl;
             cout << "Convert-only: <autoext> (auto file extension at convert)" << endl;
