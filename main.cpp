@@ -19,6 +19,9 @@
 #include "SnapmaticPicture.h"
 #include <QCoreApplication>
 #include <QDateTime>
+#include <QPainter>
+#include <QImage>
+
 #include <iostream>
 using namespace std;
 
@@ -29,9 +32,11 @@ int main(int argc, char *argv[])
 
     if (args.length() >= 3)
     {
+        bool avatarMode = false;
         bool convertToGTA = true;
         bool customFormat = false;
-        if (args.length() == 4)
+        bool keepAspectRatio = true;
+        if (args.length() >= 4)
         {
             if (args.at(3) == "-pgta")
             {
@@ -42,6 +47,45 @@ int main(int argc, char *argv[])
             {
                 convertToGTA = true;
                 customFormat = true;
+            }
+        }
+        if (args.length() >= 5)
+        {
+            if (args.at(4) == "-a")
+            {
+                avatarMode = true;
+            }
+            else if (args.at(4) == "-p")
+            {
+                avatarMode = false;
+            }
+            else if (args.at(4) == "-aiar")
+            {
+                avatarMode = true;
+                keepAspectRatio = false;
+            }
+            else if (args.at(4) == "-akar")
+            {
+                avatarMode = true;
+                keepAspectRatio = true;
+            }
+            else if (args.at(4) == "-piar")
+            {
+                avatarMode = false;
+                keepAspectRatio = false;
+            }
+            else if (args.at(4) == "-pkar")
+            {
+                avatarMode = false;
+                keepAspectRatio = true;
+            }
+            else if (args.at(4) == "-diar")
+            {
+                keepAspectRatio = false;
+            }
+            else if (args.at(4) == "-dkar")
+            {
+                keepAspectRatio = true;
             }
         }
         if (!convertToGTA)
@@ -73,17 +117,86 @@ int main(int argc, char *argv[])
                 if (!image.isNull())
                 {
                     QSize snapmaticRes(960, 536);
-                    if (image.size() != snapmaticRes) image = image.scaled(snapmaticRes, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+                    QSize avatarRes(470, 470);
+                    if (!avatarMode)
+                    {
+                        QImage snapmaticImage(snapmaticRes, QImage::Format_RGB888);
+                        snapmaticImage.fill(Qt::black);
+                        QPainter snapmaticPainter(&snapmaticImage);
+
+                        // Picture mode
+                        int diffWidth = 0;
+                        int diffHeight = 0;
+                        if (keepAspectRatio)
+                        {
+                            image = image.scaled(snapmaticRes, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                            if (image.width() != snapmaticRes.width())
+                            {
+                                diffWidth = snapmaticRes.width() - image.width();
+                                diffWidth = diffWidth / 2;
+                            }
+                            else if (image.height() != snapmaticRes.height())
+                            {
+                                diffHeight = snapmaticRes.height() - image.height();
+                                diffHeight = diffHeight / 2;
+                            }
+                        }
+                        else
+                        {
+                            image = image.scaled(snapmaticRes.width(), snapmaticRes.height(), Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+                        }
+                        snapmaticPainter.drawImage(0 + diffWidth, 0 + diffHeight, image);
+                        snapmaticPainter.end();
+                        image = snapmaticImage;
+                    }
+                    else
+                    {
+                        QImage snapmaticImage(snapmaticRes, QImage::Format_RGB888);
+                        snapmaticImage.fill(Qt::black);
+                        QPainter snapmaticPainter(&snapmaticImage);
+
+                        // Scale to Avatar Resolution if needed
+                        if (image.width() != avatarRes.width())
+                        {
+                            image.scaled(avatarRes, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+                        }
+
+                        // Avatar mode
+                        int diffWidth = 0;
+                        int diffHeight = 0;
+                        if (keepAspectRatio)
+                        {
+                            image = image.scaled(avatarRes, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                            if (image.width() > image.height())
+                            {
+                                diffHeight = avatarRes.height() - image.height();
+                                diffHeight = diffHeight / 2;
+                            }
+                            else if (image.width() < image.height())
+                            {
+                                diffWidth = avatarRes.width() - image.width();
+                                diffWidth = diffWidth / 2;
+                            }
+                        }
+                        else
+                        {
+                            image = image.scaled(avatarRes, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+                        }
+                        snapmaticPainter.drawImage(145 + diffWidth, 66 + diffHeight, image);
+                        snapmaticPainter.end();
+                        image = snapmaticImage;
+                    }
+
                     if (picture.setImage(image))
                     {
-                        picture.setPictureTitle("Converted Picture");
+                        avatarMode ? picture.setPictureTitle("Converted Avatar") : picture.setPictureTitle("Converted Picture");
                         SnapmaticProperties pictureSP = picture.getSnapmaticProperties();
                         pictureSP.uid = QString(QTime::currentTime().toString("HHmmss") +
                                                 QString::number(QDate::currentDate().dayOfYear())).toInt();
                         pictureSP.createdDateTime = QDateTime::currentDateTime();
                         pictureSP.createdTimestamp = pictureSP.createdDateTime.toTime_t();
                         picture.setSnapmaticProperties(pictureSP);
-                        picture.setPicFileName(QString("PGTA5%1").arg(QString::number(pictureSP.uid)));
+                        picture.setPictureFileName(QString("PGTA5%1").arg(QString::number(pictureSP.uid)));
                         QString filePath = args.at(2);
                         filePath.replace("<autodef>", picture.getPictureFileName());
                         if (!customFormat)
