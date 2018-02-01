@@ -276,19 +276,15 @@ int main(int argc, char *argv[])
     {
         cout << "gta5view Command Line" << endl << endl;
         cout << "Usage: " << args.at(0).toStdString().c_str() << " source target -format -mode" << endl;
-        if (args.length() >= 1)
+        if (args.length() >= 2 && args.at(1) == "--help")
         {
-            if (args.at(1) == "--help")
-            {
-                cout << "Convert-only: <autodef> (auto file name at convert)" << endl;
-                cout << "Convert-only: <autoext> (auto file extension at convert)" << endl;
-                cout << "Formats: jpg pgta g5e" << endl;
-                cout << "Modes: a p d aiar akar piar pkar diar dkar" << endl;
-            }
+            cout << "Convert-only: <autodef> (auto file name at convert)" << endl;
+            cout << "Convert-only: <autoext> (auto file extension at convert)" << endl;
+            cout << "Formats: jpg pgta g5e" << endl;
+            cout << "Modes: a p d aiar akar piar pkar diar dkar" << endl;
         }
         return 255;
     }
 
     return 0;
 }
-
