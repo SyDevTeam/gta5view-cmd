@@ -118,6 +118,9 @@ int main(int argc, char *argv[])
                 {
                     QSize snapmaticRes(960, 536);
                     QSize avatarRes(470, 470);
+                    int avatarZoneX = 145;
+                    int avatarZoneY = 66;
+
                     if (!avatarMode)
                     {
                         QImage snapmaticImage(snapmaticRes, QImage::Format_RGB888);
@@ -182,7 +185,7 @@ int main(int argc, char *argv[])
                         {
                             image = image.scaled(avatarRes, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
                         }
-                        snapmaticPainter.drawImage(145 + diffWidth, 66 + diffHeight, image);
+                        snapmaticPainter.drawImage(avatarZoneX + diffWidth, avatarZoneY + diffHeight, image);
                         snapmaticPainter.end();
                         image = snapmaticImage;
                     }
@@ -248,12 +251,13 @@ int main(int argc, char *argv[])
     else
     {
         cout << "gta5view Command Line" << endl << endl;
-        cout << "Usage: " << args.at(0).toStdString().c_str() << " source target -format" << endl;
+        cout << "Usage: " << args.at(0).toStdString().c_str() << " source target -format -mode" << endl;
         if (args.at(1) == "--help")
         {
             cout << "Convert-only: <autodef> (auto file name at convert)" << endl;
             cout << "Convert-only: <autoext> (auto file extension at convert)" << endl;
             cout << "Formats: jpg pgta g5e" << endl;
+            cout << "Modes: a p d aiar akar piar pkar diar dkar" << endl;
         }
         return 255;
     }
