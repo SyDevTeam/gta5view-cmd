@@ -32,6 +32,7 @@ int main(int argc, char *argv[])
 
     if (args.length() >= 3)
     {
+        bool isDefault = true;
         bool avatarMode = false;
         bool convertToGTA = true;
         bool customFormat = false;
@@ -53,38 +54,50 @@ int main(int argc, char *argv[])
         {
             if (args.at(4) == "-a")
             {
+                isDefault = false;
                 avatarMode = true;
             }
             else if (args.at(4) == "-p")
             {
+                isDefault = false;
                 avatarMode = false;
+            }
+            else if (args.at(4) == "-d")
+            {
+                isDefault = true;
             }
             else if (args.at(4) == "-aiar")
             {
+                isDefault = false;
                 avatarMode = true;
                 keepAspectRatio = false;
             }
             else if (args.at(4) == "-akar")
             {
+                isDefault = false;
                 avatarMode = true;
                 keepAspectRatio = true;
             }
             else if (args.at(4) == "-piar")
             {
+                isDefault = false;
                 avatarMode = false;
                 keepAspectRatio = false;
             }
             else if (args.at(4) == "-pkar")
             {
+                isDefault = false;
                 avatarMode = false;
                 keepAspectRatio = true;
             }
             else if (args.at(4) == "-diar")
             {
+                isDefault = true;
                 keepAspectRatio = false;
             }
             else if (args.at(4) == "-dkar")
             {
+                isDefault = true;
                 keepAspectRatio = true;
             }
         }
@@ -121,6 +134,17 @@ int main(int argc, char *argv[])
                     int avatarZoneX = 145;
                     int avatarZoneY = 66;
 
+                    if (isDefault)
+                    {
+                        if (image.width() == image.height())
+                        {
+                            avatarMode = true;
+                        }
+                        else
+                        {
+                            avatarMode = false;
+                        }
+                    }
                     if (!avatarMode)
                     {
                         QImage snapmaticImage(snapmaticRes, QImage::Format_RGB888);
