@@ -18,6 +18,7 @@
 
 #include "SnapmaticPicture.h"
 #include <QCoreApplication>
+#include <QImageReader>
 #include <QDateTime>
 #include <QPainter>
 #include <QImage>
@@ -149,7 +150,21 @@ int main(int argc, char *argv[])
             SnapmaticPicture picture(":/template.g5e");
             if (picture.readingPicture(true, false, true))
             {
-                QImage image(args.at(1));
+                QImage image;
+                QFile imageFile(args.at(1));
+                if (!imageFile.open(QFile::ReadOnly))
+                {
+                    cout << "gta5view-cmd: Reading of " << args.at(1).toStdString().c_str() << " failed!" << endl;
+                    return 1;
+                }
+                QImageReader imageReader;
+                imageReader.setDecideFormatFromContent(true);
+                imageReader.setDevice(&imageFile);
+                if (!imageReader.read(&image))
+                {
+                    cout << "gta5view-cmd: Parsing of " << args.at(1).toStdString().c_str() << " failed!" << endl;
+                    return 1;
+                }
                 if (!image.isNull())
                 {
                     QSize snapmaticRes(960, 536);
@@ -333,7 +348,7 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
-                    cout << "gta5view-cmd: Reading of " << args.at(1).toStdString().c_str() << " failed!" << endl;
+                    cout << "gta5view-cmd: " << args.at(1).toStdString().c_str() << " is invalid image!" << endl;
                     return 1;
                 }
             }
