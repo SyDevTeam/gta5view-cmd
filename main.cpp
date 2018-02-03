@@ -452,10 +452,9 @@ int main(int argc, char *argv[])
             cout << "Convert-only: <autodef> (auto file name at convert)" << endl;
             cout << "Convert-only: <autoext> (auto file extension at convert)" << endl;
             cout << "Formats: jpg pgta g5e" << endl;
-            cout << "Snapmatic Modes: a p d aiar akar piar pkar diar dkar" << endl;
+            cout << "Snapmatic Modes: a p d fs aiar akar piar pkar diar dkar" << endl;
             cout << "Snapmatic Flags: crew=int players=int[] title=string" << endl;
-            cout << "Modes: fs" << endl;
-            cout << "Flags: output=string" << endl;
+            cout << "Global Flags: output=string" << endl;
         }
         return 255;
     }
