@@ -34,9 +34,10 @@ int main(int argc, char *argv[])
 
     if (args.length() >= 3)
     {
+        QString format = "jpg";
         bool isDefault = true;
         bool avatarMode = false;
-        bool convertToGTA = true;
+        bool convertToGTA = false;
         bool customFormat = false;
         bool keepAspectRatio = true;
         QMap<QString,QString> flags;
@@ -52,6 +53,11 @@ int main(int argc, char *argv[])
             {
                 convertToGTA = true;
                 customFormat = true;
+            }
+            else if (args.at(3) == "-jpg")
+            {
+                format = "jpg";
+                convertToGTA = false;
             }
         }
         if (args.length() >= 5)
