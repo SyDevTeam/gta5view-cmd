@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
         bool avatarMode = false;
         bool convertToGTA = false;
         bool customFormat = false;
+        bool formatSwitch = false;
         bool keepAspectRatio = true;
         QMap<QString,QString> flags;
 
@@ -110,6 +111,11 @@ int main(int argc, char *argv[])
                 isDefault = true;
                 keepAspectRatio = true;
             }
+            else if (args.at(4) == "-fs")
+            {
+                convertToGTA = false;
+                formatSwitch = true;
+            }
         }
         if (args.length() >= 6)
         {
@@ -137,22 +143,69 @@ int main(int argc, char *argv[])
             if (picture.readingPicture(true, false, true))
             {
                 QString filePath = args.at(2);
-                filePath.replace("<autodef>", picture.getExportPictureFileName());
-                filePath.replace("<autoext>", ".jpg");
-                if (!picture.exportPicture(filePath, SnapmaticFormat::JPEG_Format))
+                if (!formatSwitch)
                 {
-                    cout << "gta5view-cmd: Exporting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " is failed!" << endl;
-                    return 1;
-                }
-                else
-                {
-                    if (flags.value("output", QString()).toLower() == "exported_filename")
+                    filePath.replace("<autodef>", picture.getExportPictureFileName());
+                    filePath.replace("<autoext>", ".jpg");
+                    if (!picture.exportPicture(filePath, SnapmaticFormat::JPEG_Format))
                     {
-                        cout << filePath.toStdString().c_str() << endl;
+                        cout << "gta5view-cmd: Exporting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " is failed!" << endl;
+                        return 1;
                     }
                     else
                     {
-                        cout << "gta5view-cmd: Exporting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " is successful!" << endl;
+                        if (flags.value("output", QString()).toLower() == "exported_filename")
+                        {
+                            cout << filePath.toStdString().c_str() << endl;
+                        }
+                        else
+                        {
+                            cout << "gta5view-cmd: Exporting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " is successful!" << endl;
+                        }
+                    }
+                }
+                else
+                {
+                    filePath.replace("<autodef>", picture.getPictureFileName());
+                    if (customFormat)
+                    {
+                        filePath.replace("<autoext>", ".g5e");
+                        if (!picture.exportPicture(filePath, SnapmaticFormat::G5E_Format))
+                        {
+                            cout << "gta5view-cmd: Converting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " is failed!" << endl;
+                            return 1;
+                        }
+                        else
+                        {
+                            if (flags.value("output", QString()).toLower() == "exported_filename")
+                            {
+                                cout << filePath.toStdString().c_str() << endl;
+                            }
+                            else
+                            {
+                                cout << "gta5view-cmd: Converting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " is successful!" << endl;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        filePath.replace("<autoext>", "");
+                        if (!picture.exportPicture(filePath, SnapmaticFormat::PGTA_Format))
+                        {
+                            cout << "gta5view-cmd: Converting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " is failed!" << endl;
+                            return 1;
+                        }
+                        else
+                        {
+                            if (flags.value("output", QString()).toLower() == "exported_filename")
+                            {
+                                cout << filePath.toStdString().c_str() << endl;
+                            }
+                            else
+                            {
+                                cout << "gta5view-cmd: Converting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " is successful!" << endl;
+                            }
+                        }
                     }
                 }
             }
@@ -399,8 +452,10 @@ int main(int argc, char *argv[])
             cout << "Convert-only: <autodef> (auto file name at convert)" << endl;
             cout << "Convert-only: <autoext> (auto file extension at convert)" << endl;
             cout << "Formats: jpg pgta g5e" << endl;
-            cout << "Modes: a p d aiar akar piar pkar diar dkar" << endl;
-            cout << "Flags: crew=int players=int[] title=string" << endl;
+            cout << "Snapmatic Modes: a p d aiar akar piar pkar diar dkar" << endl;
+            cout << "Snapmatic Flags: crew=int players=int[] title=string" << endl;
+            cout << "Modes: fs" << endl;
+            cout << "Flags: output=string" << endl;
         }
         return 255;
     }
