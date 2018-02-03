@@ -144,6 +144,17 @@ int main(int argc, char *argv[])
                     cout << "gta5view-cmd: Exporting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " is failed!" << endl;
                     return 1;
                 }
+                else
+                {
+                    if (flags.value("output", QString()).toLower() == "exported_filename")
+                    {
+                        cout << filePath.toStdString().c_str() << endl;
+                    }
+                    else
+                    {
+                        cout << "gta5view-cmd: Exporting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " is successful!" << endl;
+                    }
+                }
             }
             else
             {
