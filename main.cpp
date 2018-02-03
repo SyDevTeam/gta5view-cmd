@@ -135,13 +135,13 @@ int main(int argc, char *argv[])
                 filePath.replace("<autoext>", ".jpg");
                 if (!picture.exportPicture(filePath, SnapmaticFormat::JPEG_Format))
                 {
-                    cout << "gta5view-cmd: Exporting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " failed!" << endl;
+                    cout << "gta5view-cmd: Exporting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " is failed!" << endl;
                     return 1;
                 }
             }
             else
             {
-                cout << "gta5view-cmd: Reading of " << args.at(1).toStdString().c_str() << " failed!" << endl;
+                cout << "gta5view-cmd: Reading of " << args.at(1).toStdString().c_str() << " is failed!" << endl;
                 return 1;
             }
         }
@@ -154,7 +154,7 @@ int main(int argc, char *argv[])
                 QFile imageFile(args.at(1));
                 if (!imageFile.open(QFile::ReadOnly))
                 {
-                    cout << "gta5view-cmd: Reading of " << args.at(1).toStdString().c_str() << " failed!" << endl;
+                    cout << "gta5view-cmd: Reading of " << args.at(1).toStdString().c_str() << " is failed!" << endl;
                     return 1;
                 }
                 QImageReader imageReader;
@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
                 imageReader.setDevice(&imageFile);
                 if (!imageReader.read(&image))
                 {
-                    cout << "gta5view-cmd: Parsing of " << args.at(1).toStdString().c_str() << " failed!" << endl;
+                    cout << "gta5view-cmd: Parsing of " << args.at(1).toStdString().c_str() << " is failed!" << endl;
                     return 1;
                 }
                 if (!image.isNull())
@@ -318,12 +318,12 @@ int main(int argc, char *argv[])
                             filePath.replace("<autoext>", "");
                             if (!picture.exportPicture(filePath, SnapmaticFormat::PGTA_Format))
                             {
-                                cout << "gta5view-cmd: Converting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " failed!" << endl;
+                                cout << "gta5view-cmd: Converting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " is failed!" << endl;
                                 return 1;
                             }
                             else
                             {
-                                cout << "gta5view-cmd: Converting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " successful!" << endl;
+                                cout << "gta5view-cmd: Converting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " is successful!" << endl;
                             }
                         }
                         else
@@ -331,12 +331,12 @@ int main(int argc, char *argv[])
                             filePath.replace("<autoext>", ".g5e");
                             if (!picture.exportPicture(filePath, SnapmaticFormat::G5E_Format))
                             {
-                                cout << "gta5view-cmd: Converting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " failed!" << endl;
+                                cout << "gta5view-cmd: Converting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " is failed!" << endl;
                                 return 1;
                             }
                             else
                             {
-                                cout << "gta5view-cmd: Converting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " successful!" << endl;
+                                cout << "gta5view-cmd: Converting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " is successful!" << endl;
                             }
                         }
                     }
