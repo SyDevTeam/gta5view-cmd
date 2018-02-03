@@ -323,7 +323,7 @@ int main(int argc, char *argv[])
                             }
                             else
                             {
-                                if (flags.value("output", QString()).toLower() == "only_exported_filename")
+                                if (flags.value("output", QString()).toLower() == "exported_filename")
                                 {
                                     cout << filePath.toStdString().c_str() << endl;
                                 }
@@ -343,7 +343,7 @@ int main(int argc, char *argv[])
                             }
                             else
                             {
-                                if (flags.value("output", QString()).toLower() == "only_exported_filename")
+                                if (flags.value("output", QString()).toLower() == "exported_filename")
                                 {
                                     cout << filePath.toStdString().c_str() << endl;
                                 }
