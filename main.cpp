@@ -323,7 +323,14 @@ int main(int argc, char *argv[])
                             }
                             else
                             {
-                                cout << "gta5view-cmd: Converting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " is successful!" << endl;
+                                if (flags.value("output", QString()).toLower() == "only_exported_filename")
+                                {
+                                    cout << filePath.toStdString().c_str() << endl;
+                                }
+                                else
+                                {
+                                    cout << "gta5view-cmd: Converting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " is successful!" << endl;
+                                }
                             }
                         }
                         else
@@ -336,7 +343,14 @@ int main(int argc, char *argv[])
                             }
                             else
                             {
-                                cout << "gta5view-cmd: Converting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " is successful!" << endl;
+                                if (flags.value("output", QString()).toLower() == "only_exported_filename")
+                                {
+                                    cout << filePath.toStdString().c_str() << endl;
+                                }
+                                else
+                                {
+                                    cout << "gta5view-cmd: Converting of " << args.at(1).toStdString().c_str() << " to " << filePath.toStdString().c_str() << " is successful!" << endl;
+                                }
                             }
                         }
                     }
