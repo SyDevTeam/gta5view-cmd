@@ -16,7 +16,7 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *****************************************************************************/
 
-#include "gta5view/SnapmaticPicture.h"
+#include "SnapmaticPicture.h"
 #include <QCoreApplication>
 #include <QImageReader>
 #include <QDateTime>
