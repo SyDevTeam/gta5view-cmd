@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="template.g5e">gta5sync/res/template.g5e</file>
+        <file alias="template.g5e">gta5view/res/template.g5e</file>
     </qresource>
 </RCC>

@@ -1,6 +1,6 @@
 #/*****************************************************************************
 #* gta5view-cmd - gta5view Command Line
-#* Copyright (C) 2017 Syping
+#* Copyright (C) 2017-2018 Syping
 #*
 #* This program is free software: you can redistribute it and/or modify
 #* it under the terms of the GNU General Public License as published by
@@ -25,41 +25,20 @@ TEMPLATE = app
 CONFIG += console
 
 SOURCES += main.cpp \
-    gta5sync/SnapmaticPicture.cpp \
-    gta5sync/StringParser.cpp
+    gta5view/SnapmaticPicture.cpp \
+    gta5view/StringParser.cpp
 
 HEADERS  += \
-    gta5sync/SnapmaticPicture.h \
-    gta5sync/StringParser.h
+    gta5view/SnapmaticPicture.h \
+    gta5view/StringParser.h
 
-INCLUDEPATH += ./gta5sync
+INCLUDEPATH += ./gta5view
 
 # WINDOWS ONLY
 
 win32: DEFINES += GTA5SYNC_WIN
 # win32: RC_FILE += res/app.rc
-win32: LIBS += -luser32
 win32: CONFIG -= embed_manifest_exe
-
-# QT4 ONLY STUFF
-
-isEqual(QT_MAJOR_VERSION, 4): INCLUDEPATH += ./gta5sync/qjson4
-isEqual(QT_MAJOR_VERSION, 4): HEADERS += gta5sync/qjson4/QJsonArray.h \
-    gta5sync/qjson4/QJsonDocument.h \
-    gta5sync/qjson4/QJsonObject.h \
-    gta5sync/qjson4/QJsonParseError.h \
-    gta5sync/qjson4/QJsonValue.h \
-    gta5sync/qjson4/QJsonValueRef.h \
-    gta5sync/qjson4/QJsonParser.h \
-    gta5sync/qjson4/QJsonRoot.h
-
-isEqual(QT_MAJOR_VERSION, 4): SOURCES += gta5sync/qjson4/QJsonArray.cpp \
-    gta5sync/qjson4/QJsonDocument.cpp \
-    gta5sync/qjson4/QJsonObject.cpp \
-    gta5sync/qjson4/QJsonParseError.cpp \
-    gta5sync/qjson4/QJsonValue.cpp \
-    gta5sync/qjson4/QJsonValueRef.cpp \
-    gta5sync/qjson4/QJsonParser.cpp
 
 RESOURCES += \
     res.qrc
