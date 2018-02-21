@@ -387,10 +387,10 @@ int main(int argc, char *argv[])
                                 players = playersList;
                             }
                         }
-                        if (flags.contains("pos"))
+                        if (flags.contains("position"))
                         {
                             bool flagValid = true;
-                            QString positionFlag = flags["pos"];
+                            QString positionFlag = flags["position"];
                             if (positionFlag.left(1) == "[" && positionFlag.right(1) == "]")
                             {
                                 positionFlag.remove(0, 1);
@@ -511,7 +511,7 @@ int main(int argc, char *argv[])
             cout << "Convert-only: <autoext> (auto file extension at convert)" << endl;
             cout << "Formats: jpg pgta g5e" << endl;
             cout << "Snapmatic Modes: a p d fs aiar akar piar pkar diar dkar" << endl;
-            cout << "Snapmatic Flags: crew=int players=int[] title=string" << endl;
+            cout << "Snapmatic Flags: crew=int players=int[] position=double[] title=string" << endl;
             cout << "Global Flags: output=string" << endl;
         }
         return 255;
