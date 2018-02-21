@@ -337,6 +337,9 @@ int main(int argc, char *argv[])
                     if (picture.setImage(image))
                     {
                         int crew = 0;
+                        double posX = 0;
+                        double posY = 0;
+                        double posZ = 0;
                         QStringList players;
                         if (flags.contains("crew"))
                         {
@@ -384,6 +387,46 @@ int main(int argc, char *argv[])
                                 players = playersList;
                             }
                         }
+                        if (flags.contains("pos"))
+                        {
+                            bool flagValid = true;
+                            QString positionFlag = flags["pos"];
+                            if (positionFlag.left(1) == "[" && positionFlag.right(1) == "]")
+                            {
+                                positionFlag.remove(0, 1);
+                                positionFlag.remove(positionFlag.length() - 1, 1);
+                            }
+                            const QStringList positionsList = positionFlag.split(",");
+                            for (QString position : positionsList)
+                            {
+                                if (position.left(1) == "\"" && position.right(1) == "\"")
+                                {
+                                    position.remove(0, 1);
+                                    position.remove(position.length() - 1, 1);
+                                }
+                                bool positionValid;
+                                position.toDouble(&positionValid);
+                                if (!positionValid)
+                                {
+                                    flagValid = false;
+                                }
+                            }
+                            if (flagValid)
+                            {
+                                if (positionsList.length() >= 1)
+                                {
+                                    posX = positionsList.at(0).toDouble();
+                                }
+                                if (positionsList.length() >= 2)
+                                {
+                                    posY = positionsList.at(1).toDouble();
+                                }
+                                if (positionsList.length() >= 3)
+                                {
+                                    posZ = positionsList.at(2).toDouble();
+                                }
+                            }
+                        }
                         SnapmaticProperties pictureSP = picture.getSnapmaticProperties();
                         pictureSP.uid = QString(QTime::currentTime().toString("HHmmss") +
                                                 QString::number(QDate::currentDate().dayOfYear())).toInt();
@@ -391,6 +434,9 @@ int main(int argc, char *argv[])
                         pictureSP.createdTimestamp = pictureSP.createdDateTime.toTime_t();
                         pictureSP.crewID = crew;
                         pictureSP.playersList = players;
+                        pictureSP.location.x = posX;
+                        pictureSP.location.y = posY;
+                        pictureSP.location.z = posZ;
                         picture.setSnapmaticProperties(pictureSP);
                         picture.setPictureFileName(QString("PGTA5%1").arg(QString::number(pictureSP.uid)));
                         QString filePath = args.at(2);
