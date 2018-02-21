@@ -116,6 +116,18 @@ int main(int argc, char *argv[])
                 convertToGTA = false;
                 formatSwitch = true;
             }
+            else
+            {
+                QStringList currentFlagArg = args.at(4).split("=");
+                QString currentFlag = currentFlagArg.at(0).toLower();
+                if (currentFlag.left(1) == "-")
+                {
+                    currentFlag.remove(0, 1);
+                    currentFlagArg.removeAt(0);
+                    QString currentValue = currentFlagArg.join(QString());
+                    flags[currentFlag] = currentValue;
+                }
+            }
         }
         if (args.length() >= 6)
         {
